@@ -2,20 +2,25 @@ from flask import Flask, request, render_template
 import google.generativeai as genai
 import os
 
+# --- VERCEL DEBUGGING ---
+# Print all available environment variables to the Vercel logs.
+# This will help us see if the GOOGLE_API_KEY is being passed correctly.
+print("--- Vercel Environment Variables ---")
+print(os.environ)
+print("------------------------------------")
+# --- END DEBUGGING ---
+
+
 # --- SETUP ---
-# This tells Flask to look for the 'index.html' file in the current directory (.)
 app = Flask(__name__, template_folder='.')
 
 # --- SECURITY BEST PRACTICE ---
-# Load the API key from an environment variable. This is CRITICAL for deployment.
 GOOGLE_API_KEY = os.environ.get("AIzaSyCSrHhPeT2X5G9_d-ptfPwRIwY6ACuluTM")
 
-# This check is what causes the crash if the environment variable is not set on Vercel.
 if not GOOGLE_API_KEY:
-    # This error message will appear in your Vercel logs.
+    # This error will be raised if the key is not found in the printed list above.
     raise ValueError("CRITICAL ERROR: GOOGLE_API_KEY environment variable is not set.")
 
-# Configure the generative AI model with the key.
 genai.configure(api_key=GOOGLE_API_KEY)
 
 
@@ -34,13 +39,11 @@ def get_ai_response(prompt_text):
 
 
 # --- WEB ROUTES for VERCEL ---
-# This single function will now handle all requests sent to the app.
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST'])
 @app.route('/<path:path>', methods=['GET', 'POST'])
 def catch_all(path):
     """
     This function catches all requests and handles the form logic.
-    It's the entry point for the Vercel serverless function.
     """
     response_text = None
 
@@ -63,10 +66,7 @@ def catch_all(path):
             print(f"Form processing error: {e}")
             response_text = "An error occurred while processing the form."
 
-    # For both GET and POST requests, it renders the same HTML page.
-    # If it was a POST, 'response_text' will have a value. If GET, it will be None.
     return render_template('index.html', response=response_text)
 
-# The __main__ block is for local testing and is ignored by Vercel.
 if __name__ == '__main__':
     app.run(debug=True)
