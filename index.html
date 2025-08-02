@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Web Assistant</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #282c34;
+            color: #ffffff;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: auto;
+            background: #3c4049;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #61dafb;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #cddc39; /* Light green for labels */
+        }
+        textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            border: 1px solid #5a6069;
+            font-size: 16px;
+            background-color: #4f545f;
+            color: #ffffff;
+            box-sizing: border-box; /* Important for padding and width */
+        }
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #61dafb;
+            box-shadow: 0 0 0 3px rgba(97, 218, 251, 0.3);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #61dafb;
+            color: #282c34;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #52b8d8;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .response {
+            margin-top: 30px;
+            background-color: #20232a; /* Slightly darker than body */
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #cddc39;
+            white-space: pre-wrap; /* Preserves line breaks and spacing */
+            word-wrap: break-word; /* Ensures long words don't overflow */
+        }
+        .response h2 {
+            margin-top: 0;
+            color: #61dafb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>AI Web Assistant</h1>
+        <!-- The form action points to the root URL, which is handled by the index() function -->
+        <form action="/" method="post">
+            <label for="task">Select a Task:</label>
+            <select name="task" id="task">
+                <option value="question">Answer a Question</option>
+                <option value="summarize">Summarize Text</option>
+                <option value="creative">Generate Creative Content</option>
+            </select>
+
+            <label for="user_input">Your Query or Text:</label>
+            <textarea name="user_input" id="user_input" rows="10" placeholder="Enter your question or text here..." required></textarea>
+
+            <button type="submit">Get AI Response</button>
+        </form>
+
+        <!--
+          This is a Jinja2 template block.
+          If the 'response' variable passed from Flask contains data, this div will be rendered.
+          Otherwise, it will be completely omitted from the HTML.
+        -->
+        {% if response %}
+        <div class="response">
+            <h2>AI Response:</h2>
+            <p>{{ response }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
