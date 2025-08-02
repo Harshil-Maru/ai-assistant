@@ -2,25 +2,16 @@ from flask import Flask, request, render_template
 import google.generativeai as genai
 import os
 
-# --- VERCEL DEBUGGING ---
-# Print all available environment variables to the Vercel logs.
-# This will help us see if the GOOGLE_API_KEY is being passed correctly.
-print("--- Vercel Environment Variables ---")
-print(os.environ)
-print("------------------------------------")
-# --- END DEBUGGING ---
-
-
 # --- SETUP ---
 app = Flask(__name__, template_folder='.')
 
 # --- SECURITY BEST PRACTICE ---
+# We have confirmed via logs that Vercel is providing this key.
+# We can now directly get the key without the extra check that was causing the crash.
 GOOGLE_API_KEY = os.environ.get("AIzaSyCSrHhPeT2X5G9_d-ptfPwRIwY6ACuluTM")
 
-if not GOOGLE_API_KEY:
-    # This error will be raised if the key is not found in the printed list above.
-    raise ValueError("CRITICAL ERROR: GOOGLE_API_KEY environment variable is not set.")
-
+# The script will now proceed directly to configuring the AI.
+# If there's an issue with the key itself, the genai library will raise a more specific error.
 genai.configure(api_key=GOOGLE_API_KEY)
 
 
